@@ -13,4 +13,4 @@ Desde el front end utilicé bootstrap para el styling y ethers.js para comunicar
 Finalmente cambié la red donde reside el contrato para hacer testing en Rinkeby simplemente cambiando la network destino del contrato al deployearlo y utilicé mi cuenta con fondos para la testnet de Rinkeby en vez que las credenciales locales. Para obtener una url creé un proyecto usando Infura y, agregándolo junto con la clave privada de mi cuenta de testing en el hardhat.config.ts, tenemos la configuración válida para poder deployear en Rinkeby. Luego deployeamos usando el comando `hardhat run scripts/deploy.ts --network rinkeby` y tenemos el contrato en la testnet. Todo lo demás sigue funcionando de igual manera, simplemente hay que cambiar la red y cuenta en MetaMask.
 
 La arquitectura básica del proyecto se detalla debajo
-![Arquitectura](./public/architecture.png "Arquitectura")
+![Arquitectura](./challenge-dapp/public/architecture.png "Arquitectura")
