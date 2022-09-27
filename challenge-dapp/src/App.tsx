@@ -58,7 +58,7 @@ function App() {
     }
   }
 
-  // Sets the greeting from input text box
+  // Sets the bottle message from input text box
   async function replaceMessage() {
     if (!message) return;
 
@@ -116,5 +116,7 @@ function App() {
     </>
   );
 }
+
+
 
 export default App;
