@@ -1,57 +1,57 @@
-import "./App.css";
 // Bootstrap imports
 import Button from "react-bootstrap/Button";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
-import { useState } from "react";
+import { Alert } from "react-bootstrap";
+
+import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
-import Greeter from "./artifacts/contracts/Greeter.sol/Greeter.json";
+import Bottle from "./artifacts/contracts/Bottle.sol/Bottle.json";
 
-
-declare global{
-  interface Window {ethereum: any; }
+declare global {
+  interface Window {
+    ethereum: any;
+  }
 }
 window.ethereum = window.ethereum || {};
-
-
 
 const greeterAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 function App() {
   // Property Variables
 
-  const [message, setMessage] = useState("");
-  const [currentGreeting, setCurrentGreeting] = useState("");
+  const [message, setMessage] = useState(""); // Auxiliary variable to interact with the form
+  const [currentMessage, setCurrentMessage] = useState(""); // Auxiliary variable to display to the user
+
+  // Invoque initial read
+  useEffect(() => {
+    fetchMessage();
+  }, []);
 
   // Helper Functions
 
   // Requests access to the user's Meta Mask Account
-  // https://metamask.io/
   async function requestAccount() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
   }
 
   // Fetches the current value store in greeting
-  async function fetchGreeting() {
+  async function fetchMessage() {
     // If MetaMask exists
     if (typeof window.ethereum !== "undefined") {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
         greeterAddress,
-        Greeter.abi,
+        Bottle.abi,
         provider
       );
-      console.log("Contract: ",contract);
       try {
-        // Call Greeter.greet() and display current greeting in `console`
-        /* 
-          function greet() public view returns (string memory) {
-            return greeting;
-          }
-        */
-        const data = await contract.greet();
-        console.log("data: ", data);
-        setCurrentGreeting(data);
+        // Call Bottle.getMessage()
+        const data = await contract.getMessage();
+        console.log("message: ", data);
+
+        // Update display variable
+        setCurrentMessage(data);
       } catch (error) {
         console.log("Error: ", error);
       }
@@ -59,7 +59,7 @@ function App() {
   }
 
   // Sets the greeting from input text box
-  async function setGreeting() {
+  async function replaceMessage() {
     if (!message) return;
 
     // If MetaMask exists
@@ -70,37 +70,46 @@ function App() {
       const signer = provider.getSigner();
 
       // Create contract with signer
-      /*
-        function setGreeting(string memory _greeting) public {
-          console.log("Changing greeting from '%s' to '%s'", greeting, _greeting);
-          greeting = _greeting;
-        } 
-      */
-      const contract = new ethers.Contract(greeterAddress, Greeter.abi, signer);
-      const transaction = await contract.setGreeting(message);
+
+      const contract = new ethers.Contract(greeterAddress, Bottle.abi, signer);
+      const transaction = await contract.setMessage(message);
 
       setMessage("");
       await transaction.wait();
-      fetchGreeting();
+      fetchMessage();
     }
   }
 
   return (
     <>
       <div className="container mt-5">
+        <div className="mt-5 mb-5">
+          <Alert variant={"primary"}>
+            <div>
+              <h2>You found a decentralized bottle, and it has a message!</h2>
+              <hr />
+              <p style={{ overflowWrap: "break-word" }}>{currentMessage}</p>
+            </div>
+          </Alert>
+        </div>
+
         <FloatingLabel
           controlId="floatingInput"
-          label="Greeting"
+          label="Leave a new message in the bottle"
           className="mb-3"
         >
-          <Form.Control type="greeting" placeholder="Your greeting here" value={message} onChange={(e) => setMessage(e.target.value)}/>
+          <Form.Control
+            type="greeting"
+            placeholder="Your new message goes here"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
         </FloatingLabel>
 
-      <div className="d-flex justify-content-center" style={{gap: 10}}>
-        <Button onClick={fetchGreeting}>Fetch Greeting</Button>
-        <Button onClick={setGreeting}>Set Greeting</Button>  
-      </div>
-      
+        <div className="d-flex justify-content-center" style={{ gap: 10 }}>
+          <Button onClick={fetchMessage}>Fetch message</Button>
+          <Button onClick={replaceMessage} variant="success">Change message</Button>
+        </div>
       </div>
     </>
   );

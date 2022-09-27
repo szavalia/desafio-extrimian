@@ -1,12 +1,12 @@
 import { ethers } from "hardhat";
 
 async function main() {
-  const Greeter = await ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Extrimian!");
+  const Bottle = await ethers.getContractFactory("Bottle");
+  const bottle = await Bottle.deploy("This is a message in a bottle, replace it with a message for the next castaway to see");
 
-  await greeter.deployed();
+  await bottle.deployed();
 
-  console.log("Greeter deployed to: ", greeter.address);
+  console.log("Bottle deployed to: ", bottle.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
