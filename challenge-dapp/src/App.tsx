@@ -16,7 +16,7 @@ declare global {
 }
 window.ethereum = window.ethereum || {};
 
-const greeterAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const contractAddress = "0x2b07B790D7182d91EFc2E38eeEf257e1915901C0";
 function App() {
   // Property Variables
 
@@ -41,7 +41,7 @@ function App() {
     if (typeof window.ethereum !== "undefined") {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(
-        greeterAddress,
+        contractAddress,
         Bottle.abi,
         provider
       );
@@ -71,7 +71,7 @@ function App() {
 
       // Create contract with signer
 
-      const contract = new ethers.Contract(greeterAddress, Bottle.abi, signer);
+      const contract = new ethers.Contract(contractAddress, Bottle.abi, signer);
       const transaction = await contract.setMessage(message);
 
       setMessage("");
@@ -108,7 +108,9 @@ function App() {
 
         <div className="d-flex justify-content-center" style={{ gap: 10 }}>
           <Button onClick={fetchMessage}>Fetch message</Button>
-          <Button onClick={replaceMessage} variant="success">Change message</Button>
+          <Button onClick={replaceMessage} variant="success">
+            Change message
+          </Button>
         </div>
       </div>
     </>
